@@ -1,0 +1,168 @@
+
+Dijkstra can't be substituted to find the maximum cost. The minimum once achieved can't change in case of positive edge weights. But the maximum can change, especially in cases of DAG.
+
+For example in the question : 
+	- https://leetcode.com/problems/path-with-maximum-probability/description
+	- 
+
+- It is assumed that the the solution is Dijkstras but its not.
+- It is actually a best first search where the best path taken is always the maximum current probablity one. The code LOOKS	similar to dijkstras but its not.
+
+------------------------------------------------------------------------------------------------------------------------
+/*
+	actual code for the above problem
+*/
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
+
+using namespace std;
+
+// Define a pair for storing nodes with their probability in the priority queue
+using pii = pair<double, int>;
+
+double maximizeProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+    // Create the graph as an adjacency list with edge probabilities
+    vector<vector<pair<int, double>>> graph(n);
+    for (int i = 0; i < edges.size(); ++i) {
+        int a = edges[i][0];
+        int b = edges[i][1];
+        double prob = succProb[i];
+        graph[a].emplace_back(b, prob);
+        graph[b].emplace_back(a, prob);
+    }
+    
+    // Priority queue to store nodes with the maximum path probability, using a max-heap
+    priority_queue<pii, vector<pii>, less<>> max_heap;
+    max_heap.push({1.0, start});
+    
+    // Vector to store the maximum probability to each node, initialized to 0
+    vector<double> max_prob(n, 0.0);
+    max_prob[start] = 1.0;
+    
+    while (!max_heap.empty()) {
+        double current_prob = max_heap.top().first;
+        int node = max_heap.top().second;
+        max_heap.pop();
+        
+        // If the destination node is reached, return the probability
+        if (node == end) {
+            return current_prob;
+        }
+        
+        // Process each neighbor
+        for (const auto& neighbor : graph[node]) {
+            int next_node = neighbor.first;
+            double edge_prob = neighbor.second;
+            double new_prob = current_prob * edge_prob;
+            // If this path probability is better, update and push to the heap
+            if (new_prob > max_prob[next_node]) {
+                max_prob[next_node] = new_prob;
+                max_heap.push({new_prob, next_node});
+            }
+        }
+    }
+    
+    // If the destination is not reachable, return 0
+    return 0.0;
+}
+
+int main() {
+    int n = 3;
+    vector<vector<int>> edges = {{0, 1}, {1, 2}, {0, 2}};
+    vector<double> succProb = {0.5, 0.5, 0.2};
+    int start = 0;
+    int end = 2;
+    
+    double result = maximizeProbability(n, edges, succProb, start, end);
+    cout << "Maximum Probability: " << result << endl;
+    
+    return 0;
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+/*
+	Template for the above type of problems
+*/
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+#include <functional>
+
+using namespace std;
+
+// Define a node structure
+struct Node {
+    int id;
+    double heuristic;
+    bool operator>(const Node& other) const {
+        return heuristic > other.heuristic;
+    }
+};
+
+// Define a graph structure (adjacency list)
+unordered_map<int, vector<int>> graph = {
+    {0, {1, 2}},
+    {1, {3, 4}},
+    {2, {4}},
+    {3, {}},
+    {4, {3}}
+};
+
+// Define a heuristic function
+double heuristic(int node, int goal) {
+    // Example heuristic function: simple difference (not realistic for many cases)
+    return abs(node - goal); // here if we replace it by curr_prob*edge_prob we get the above code.
+}
+
+// Greedy Best-First Search
+bool greedyBestFirstSearch(int start, int goal) {
+    priority_queue<Node, vector<Node>, greater<Node>> open_list;
+    unordered_map<int, bool> visited;
+    
+    open_list.push({start, heuristic(start, goal)});
+    
+    while (!open_list.empty()) {
+        Node current = open_list.top();
+        open_list.pop();
+        
+        if (current.id == goal) {
+            return true;  // Goal found
+        }
+        
+        if (visited[current.id]) {
+            continue;
+        }
+        
+        visited[current.id] = true;
+        
+        for (int neighbor : graph[current.id]) {
+            if (!visited[neighbor]) {
+                open_list.push({neighbor, heuristic(neighbor, goal)});
+            }
+        }
+    }
+    
+    return false;  // Goal not reachable
+}
+
+int main() {
+    int start = 0;
+    int goal = 3;
+    
+    if (greedyBestFirstSearch(start, goal)) {
+        cout << "Goal reached!" << endl;
+    } else {
+        cout << "Goal not reachable." << endl;
+    }
+    
+    return 0;
+}
+
+------------------------------------------------------------------------------------------------------------------------
