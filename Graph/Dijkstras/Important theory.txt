@@ -3,7 +3,7 @@ Dijkstra can't be substituted to find the maximum cost. The minimum once achieve
 
 For example in the question : 
 	- https://leetcode.com/problems/path-with-maximum-probability/description
-	- 
+	- https://leetcode.com/problems/path-with-minimum-effort/description/
 
 - It is assumed that the the solution is Dijkstras but its not.
 - It is actually a best first search where the best path taken is always the maximum current probablity one. The code LOOKS	similar to dijkstras but its not.
