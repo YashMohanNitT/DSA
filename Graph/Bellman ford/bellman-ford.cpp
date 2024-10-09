@@ -93,15 +93,17 @@ void solve()
     d[v] = 0;
     vector<int> p(n, -1);
     int x;
-    for (int i = 0; i < n; ++i) {
-        x = -1;
-        for (Edge e : edges)
-            if (d[e.a] < INF)
+    for (int i = 0; i < n; ++i) { // notice here that we do it n times. Ideally this would be done n-1 times and then one more separate run.
+        x = -1; // this resets after every relaxation. Thus in the nth turn if we get a new relaxation that means we have a neagtive cycle.
+        for (Edge e : edges) {
+            if (d[e.a] < INF) {
                 if (d[e.b] > d[e.a] + e.cost) {
                     d[e.b] = max(-INF, d[e.a] + e.cost); // -INF to avoid int overflow
                     p[e.b] = e.a;
                     x = e.b;
                 }
+            }
+        }
     }
 
     if (x == -1)
@@ -109,12 +111,12 @@ void solve()
     else {
         int y = x;
         for (int i = 0; i < n; ++i)
-            y = p[y];
+            y = p[y]; // we take parents n times because then we will definitely end up in a cycle.
 
         vector<int> path;
         for (int cur = y;; cur = p[cur]) {
             path.push_back(cur);
-            if (cur == y && path.size() > 1)
+            if (cur == y && path.size() > 1) // if parent is repeated then break as we have found our path.
                 break;
         }
         reverse(path.begin(), path.end());
