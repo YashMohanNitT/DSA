@@ -154,8 +154,19 @@ void solve() {
     out(bfsResult, bfsResult.size());
 }
 
-int32_t main() {
-    yash;  // Fast input/output
+int32_t main()
+{
+    clock_t begin = clock();
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    yash;
+    // w()
     solve();
+#ifndef ONLINE_JUDGE
+    clock_t end = clock();
+    cout << "\n\nExecuted In: " << double(end - begin) / CLOCKS_PER_SEC * 1000 << " ms";
+#endif
     return 0;
 }
