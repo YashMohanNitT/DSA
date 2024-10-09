@@ -56,44 +56,10 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
 }
  
 void solve() {
-	int n, m;
-	cin >> n >> m;
-	vector<vector<pair<int, int>>> adj(n + 1);
-	vector<int> dist(n + 1, LLONG_MAX);
-	for(int i = 0; i < m; ++i) {
-		int a, b, c;
-		cin >> a >> b >> c;
-		adj[a].push_back({b, c});
-	}
-	dist[1] = 0;
-	pq<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
-	q.push({0, 1});
-	while(!q.empty()) {
-		pair<int, int> curr = q.top();
-		q.pop();
-		int length = curr.first;
-		int currCityId = curr.second;
-
-		/*
-			- (dist[currCityId] < length) ensures that the curr city being processed has the lowest distance possible.
-			- since length is already greater than the current distance of the node to be processed, no extra node added to it can reduce its length. 			
-		*/
-		if (dist[currCityId] < length) {
-			continue;
-		}
-		for(auto [nexyCityId, adjacentLength] : adj[currCityId]) {
-			if (dist[nexyCityId] > dist[currCityId] + adjacentLength) {
-				dist[nexyCityId] = dist[currCityId] + adjacentLength;
-				q.push({dist[nexyCityId], nexyCityId});
-			}
-		}
-	}
-	for(int i = 1; i <= n; ++i) {
-		cout << dist[i];
-		if(i != n) {
-			cout << " ";
-		}
-	}
+	int t, w;
+	cin >> t >> w;
+	double d = (-1 + sqrt(1 + (8*t)/w))/2;
+	cout << d << endl;
 }
  
 int32_t main()
