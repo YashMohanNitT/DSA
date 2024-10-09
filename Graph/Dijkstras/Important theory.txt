@@ -1,5 +1,6 @@
 
-Dijkstra can't be substituted to find the maximum cost. The minimum once achieved can't change in case of positive edge weights. But the maximum can change, especially in cases of DAG.
+Dijkstra can't be substituted to find the maximum cost. The minimum once achieved can't change in case of positive edge weights. 
+But the maximum can change, especially in cases of DAG.
 
 For example in the question : 
 	- https://leetcode.com/problems/path-with-maximum-probability/description
