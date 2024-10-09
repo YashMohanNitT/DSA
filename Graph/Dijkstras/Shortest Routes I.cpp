@@ -107,7 +107,7 @@ void solve() {
 
 		/*
 			- (dist[currCityId] < length) ensures that the curr city being processed has the lowest distance possible.
-			- since length is already greater than the current distance of the node to be processed, no extra node added to it can reduce its length. 			
+			- since length is already greater than the current distance of the node to be processed, no extra node added to the current path can reduce its length. 			
 		*/
 		if (dist[currCityId] < length) {
 			continue;
