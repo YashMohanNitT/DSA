@@ -1,26 +1,30 @@
 /*
 
-	You are given an integer n. On each step, you may subtract one of the digits from the number.
-	How many steps are required to make the number equal to 0?
-	
-	Input
-		The only input line has an integer n.
-	Output
-		Print one integer: the minimum number of steps.
-	
-	Constraints
-		1 <= n <= 10^6
+You are in a book shop which sells n different books. 
+You know the price and number of pages of each book.
+You have decided that the total price of your purchases will be at most x. 
+What is the maximum number of pages you can buy? You can buy each book at most once.
 
-	Example
-		Input:
-			27
+Input
+	The first input line contains two integers n and x: the number of books and the maximum total price.
+	The next line contains n integers price1,....,pricen: the price of each book.
+	The last line contains n integers page1,....,pagen: the number of pages of each book.
+ 
+Output
+	Print one integer: the maximum number of pages.
 
-		Output:
-			5
+Example
+	Input:
+		4 10
+		4 8 5 3
+		5 12 8 1
 
-	Explanation: An optimal solution is 27 -> 20 -> 18 -> 10 -> 9 -> 0.
+	Output:
+		13
+
+	Explanation: You can buy books 1 and 3. Their price is 4+5=9 and the number of pages is 5+8=13.
 */
-
+ 
 #include <bits/stdc++.h>
  
 #define endl            "\n"
@@ -38,10 +42,10 @@
 #define mod               1000000007
  
 using namespace std;
-
+ 
 typedef pair<int, int> pii;
 typedef vector<pii> vpii;
-
+ 
 vector<string> split(const string& s, char c) {
 	vector<string> v; stringstream ss(s); string x;
 	while (getline(ss, x, c)) v.emplace_back(x); return move(v);
@@ -83,54 +87,39 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
 	cout << "; \n";
 	__evars(++it, args...);
 }
-vector<int> dp;
-int ways(int n) {
-	// EVARS(n)
-	if (n < 10) return 1;
-	if (n < 0) return INT_MAX;
-
-	if(dp[n] != -1) {
-		return dp[n];
+int f(int idx, int x, vector<int> &h, vector<int> &s, vector<vector<int>> &dp){
+	if(idx == h.size() || x == 0){
+		return 0;
 	}
-	int temp = n;
-	vector<int> digits;
-	while(temp) {
-		if (temp%10) {
-			digits.push_back(temp%10);
-		}
-		temp /= 10;
+	if(dp[idx][x] != -1){
+		return dp[idx][x];
 	}
-	// EVARS(digits)
-	int ans = INT_MAX;
-	for (int curr : digits) {
-		ans = min(ans, ways(n - curr) + 1);
+	int ans = f(idx + 1, x, h, s, dp);
+	if(x >= h[idx]){
+		ans = max(ans, s[idx] + f(idx + 1, x - h[idx], h, s, dp));
 	}
-	return dp[n] = ans;
+	return dp[idx][x] = ans;
 }
 void solve() {
-	int n;
-	cin >> n;
-	dp.assign(n + 1, INT_MAX);
-	for(int i = 1; i < 10; ++i) {
-		dp[i] = 1;
+	int n, x;
+    cin >> n >> x;
+    vector<int> pages(n), prices(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> prices[i];
+    }
+ 	for (int i = 0; i < n; ++i) {
+        cin >> pages[i];
+    }
+    vector<int> dp(x + 1, 0);
+
+	for (int idx = 0; idx < n; ++idx) {
+	    for (int cost = x; cost >= prices[idx]; --cost) {
+	        dp[cost] = max(dp[cost], pages[idx] + dp[cost - prices[idx]]);
+	    }
 	}
-	for (int i = 10; i <= n; ++i) {
-		int temp = i;
-		vector<int> digits;
-		while(temp) {
-			if (temp%10) {
-				digits.push_back(temp%10);
-			}
-			temp /= 10;
-		}
-		// EVARS(digits)
-		for (int curr : digits) {
-			dp[i] = min(dp[i], dp[i - curr] + 1);
-		}
-	}
-	cout << dp[n];
-	/*dp.assign(n + 1, -1);
-	cout << ways(n);*/
+	cout << dp[x] << endl;
+    /*vvi dp(n + 1, vi(x + 1, -1));
+    cout << f(0, x, prices, pages, dp);*/
 }
  
 int32_t main()

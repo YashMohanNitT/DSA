@@ -1,24 +1,31 @@
 /*
+    The edit distance between two strings is the minimum number of operations required to transform one string into the other.
+    The allowed operations are:
 
-	You are given an integer n. On each step, you may subtract one of the digits from the number.
-	How many steps are required to make the number equal to 0?
-	
-	Input
-		The only input line has an integer n.
-	Output
-		Print one integer: the minimum number of steps.
-	
-	Constraints
-		1 <= n <= 10^6
+    Add one character to the string.
+    Remove one character from the string.
+    Replace one character in the string.
 
-	Example
-		Input:
-			27
+    For example, the edit distance between LOVE and MOVIE is 2, because you can first replace L with M, and then add I.
+    Your task is to calculate the edit distance between two strings.
+    
+    Input
+        The first input line has a string that contains n characters between A–Z.
+        The second input line has a string that contains m characters between A–Z.
+    Output
+        Print one integer: the edit distance between the strings.
+   
+    Constraints
 
-		Output:
-			5
+        1 <= n,m <= 5000
 
-	Explanation: An optimal solution is 27 -> 20 -> 18 -> 10 -> 9 -> 0.
+    Example
+        Input:
+            LOVE
+            MOVIE
+
+        Output:
+            2
 */
 
 #include <bits/stdc++.h>
@@ -66,71 +73,48 @@ void evars(vector<vector<t>> a){
  
 inline void __evars_begin(int line) { cout << "#" << line << ": "; }
 template<typename T> inline void __evars_out_var(vector<T> val) { cout << arrStr(val, val.size()); }
-template<typename T> inline void __evars_out_var(vector<vector<T>> vals) { 
-	// cout << endl;
-	for(vector<T> &val : vals) {
-		cout << arrStr(val, val.size());
-		cout << endl;
-	}
-}
 template<typename T> inline void __evars_out_var(T* val) { cout << arrStr(val, 10); }
 template<typename T> inline void __evars_out_var(T val) { cout << val; }
 inline void __evars(vector<string>::iterator it) { cout << endl; }
+ 
 template<typename T, typename... Args>
 inline void __evars(vector<string>::iterator it, T a, Args... args) {
 	cout << it->substr((*it)[0] == ' ', it->length()) << "=";
 	__evars_out_var(a);
-	cout << "; \n";
+	cout << "; ";
 	__evars(++it, args...);
 }
-vector<int> dp;
-int ways(int n) {
-	// EVARS(n)
-	if (n < 10) return 1;
-	if (n < 0) return INT_MAX;
-
-	if(dp[n] != -1) {
-		return dp[n];
-	}
-	int temp = n;
-	vector<int> digits;
-	while(temp) {
-		if (temp%10) {
-			digits.push_back(temp%10);
-		}
-		temp /= 10;
-	}
-	// EVARS(digits)
-	int ans = INT_MAX;
-	for (int curr : digits) {
-		ans = min(ans, ways(n - curr) + 1);
-	}
-	return dp[n] = ans;
+ 
+string n,m;
+int mem[5010][5010];
+int dp(int i, int j) {
+    if(i == n.size() && j == m.size()) {
+        return 0;
+    }
+    if (i == n.size()) {
+        return m.size() - j; // take a look at this
+    }
+    if (j == m.size()) {
+        return n.size() - i; // take a look at this
+    }
+    if (mem[i][j] != -1) {
+        return mem[i][j];
+    }
+    if (n[i] == m[j]) {
+        return mem[i][j] = dp(i + 1, j + 1);
+    }
+    int ans = INT_MAX;
+    ans = min(ans, dp(i, j + 1)); // insert a new character
+    ans = min(ans, dp(i + 1, j + 1));// replace the character 
+    ans = min(ans, dp(i + 1, j));// delete the character
+    return mem[i][j] = ans + 1;
 }
+
+
 void solve() {
-	int n;
-	cin >> n;
-	dp.assign(n + 1, INT_MAX);
-	for(int i = 1; i < 10; ++i) {
-		dp[i] = 1;
-	}
-	for (int i = 10; i <= n; ++i) {
-		int temp = i;
-		vector<int> digits;
-		while(temp) {
-			if (temp%10) {
-				digits.push_back(temp%10);
-			}
-			temp /= 10;
-		}
-		// EVARS(digits)
-		for (int curr : digits) {
-			dp[i] = min(dp[i], dp[i - curr] + 1);
-		}
-	}
-	cout << dp[n];
-	/*dp.assign(n + 1, -1);
-	cout << ways(n);*/
+    cin >> n >> m;
+    memset(mem, -1, sizeof(mem));
+    cout << dp(0, 0);
 }
  
 int32_t main()
