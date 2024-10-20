@@ -1,34 +1,28 @@
  /*
-    Your task is to build a tower whose width is 2 and height is n. 
-
-    You have an unlimited supply of blocks whose width and height are integers.
-
-    Given n, how many different towers can you build? 
-    Mirrored and rotated towers are counted separately if they look different.
-   
+    You have n coins with certain values. 
+    Your task is to find all money sums you can create using these coins.
+    
     Input
-        The first input line contains an integer t: the number of tests.
-        After this, there are t lines, and each line contains an integer n: the height of the tower.
+        The first input line has an integer n: the number of coins.
+        The next line has n integers x1,x2,...,xn: the values of the coins.
     
     Output
-        For each test, print the number of towers modulo 10^9+7.
+        First print an integer k: the number of distinct money sums. 
+        After this, print all possible sums in increasing order.
     
     Constraints
 
-        1 <= t <= 100
-        1 <= n <= 10^6
+        1 <= n <= 100
+        1 <= xi <= 1000
 
     Example
         Input:
-            3
-            2
-            6
-            1337
+            4
+            4 2 5 2
 
         Output:
-            8
-            2864
-            640403945
+            9
+            2 4 5 6 7 8 9 11 13
 */
  
 #include <bits/stdc++.h>
