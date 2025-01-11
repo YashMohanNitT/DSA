@@ -54,17 +54,21 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
  
 class DSU {
 private:
+	int components;
+	int maxSize;
     vector<int> parent;
-    vector<int> rank; // Alternatively, use size if preferred.
+    vector<int> size; // Alternatively, use size if preferred.
 
 public:
     // Constructor to initialize DSU with n elements.
     DSU(int n) {
-        parent.resize(n);
-        rank.resize(n, 1); // Initial rank (or size) of each set is 1.
+        parent.resize(n + 10);
+        size.resize(n + 10, 1); // Initial size (or size) of each set is 1.
         for (int i = 0; i < n; ++i) {
             parent[i] = i; // Each element is its own parent initially.
         }
+        components = n;
+        maxSize = 1;
     }
 
     int find(int x) {
@@ -74,8 +78,8 @@ public:
         return parent[x];
     }
 
-    // Union two sets by rank (or size).
-    bool union(int x, int y) {
+    // Union two sets by size (or size).
+    bool unionSet(int x, int y) {
         int rootX = find(x);
         int rootY = find(y);
 
@@ -83,16 +87,15 @@ public:
             return false;
         }
 
-        // Union by rank: attach the smaller tree under the larger tree.
-        if(rank[rootX] < rank[rootY]) {
+        // Union by size: attach the smaller tree under the larger tree.
+        if(size[rootX] < size[rootY]) {
         	swap(rootX, rootY);
         }
         
-        parent[rootX] = rootY; // Merge the smaller tree to larger tree (based on rank)
-
-        if(rank[rootX] == rank[rootY]) {
-        	rank[rootX] += 1; // Increment rank only when both ranks are equal.
-        }
+        parent[rootY] = rootX; // Merge the smaller tree to larger tree (based on size)
+        size[rootX] += size[rootY];
+        maxSize = max(maxSize, size[rootX]);
+        components--;
         return true; // Union was successful.
     }
 
@@ -100,10 +103,26 @@ public:
     bool connected(int x, int y) {
         return find(x) == find(y);
     }
+
+    int getComponents() {
+    	return components;
+    }
+
+    int getMaxSize() {
+    	return maxSize;
+    }
 };
 
 void solve() {
-	
+	int n, m;
+    cin >> n >> m;
+	DSU dsu(n);
+	int a, b;
+    for(int i = 0; i < m; ++i) {
+        cin >> a >> b;
+        dsu.unionSet(a, b);
+        cout << dsu.getComponents() << " " << dsu.getMaxSize() << endl;
+    }
 }
  
 int32_t main()
@@ -114,7 +133,7 @@ int32_t main()
     freopen("output.txt", "w", stdout);
 #endif
     yash;
-    w()
+    // w()
     solve();
 #ifndef ONLINE_JUDGE
     clock_t end = clock();
