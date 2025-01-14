@@ -124,31 +124,25 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
  
 class DSU {
 private:
-	int components;
-	int maxSize;
     vector<int> parent;
-    vector<int> size; // Alternatively, use rank if preferred.
+    vector<int> rank;
 
 public:
-    // Constructor to initialize DSU with n elements.
     DSU(int n) {
-        parent.resize(n + 10);
-        size.resize(n + 10, 1); // Initial size (or size) of each set is 1.
-        for (int i = 0; i < n; ++i) {
-            parent[i] = i; // Each element is its own parent initially.
+        parent.resize(n + 1); 
+        rank.resize(n + 1, 1); 
+        for (int i = 1; i <= n; ++i) {
+            parent[i] = i; 
         }
-        components = n;
-        maxSize = 1;
     }
 
     int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]); // Path compression.
+        if (x == parent[x]) {
+            return x;
         }
-        return parent[x];
+        return parent[x] = find(parent[x]);
     }
 
-    // Union two sets by size (or size).
     bool unionSet(int x, int y) {
         int rootX = find(x);
         int rootY = find(y);
@@ -157,48 +151,68 @@ public:
             return false;
         }
 
-        // Union by size: attach the smaller tree under the larger tree.
-        if(size[rootX] < size[rootY]) {
-        	swap(rootX, rootY);
+        if (rank[rootX] < rank[rootY]) {
+            swap(rootX, rootY);
         }
-        
-        parent[rootY] = rootX; // Merge the smaller tree to larger tree (based on size)
-        size[rootX] += size[rootY];
-        maxSize = max(maxSize, size[rootX]);
-        components--;
-        return true; // Union was successful.
+        parent[rootY] = rootX; 
+        if (rank[rootX] == rank[rootY]) {
+            rank[rootX]++;
+        }
+        return true;
     }
 
-    // Check if two elements are in the same set.
     bool connected(int x, int y) {
         return find(x) == find(y);
     }
+};
 
-    int getComponents() {
-    	return components;
-    }
-
-    int getMaxSize() {
-    	return maxSize;
+class operation {
+public:
+    string operationType;
+    int a, b;
+    operation(string ot, int aa, int bb) {
+        operationType = ot;
+        a = aa;
+        b = bb;
     }
 };
 
 void solve() {
-	int n, m;
-    cin >> n >> m;
-	DSU dsu(n);
-	string operationType;
-	int a, b;
-    for(int i = 0; i < m; ++i) {
-        cin >> operationType;
-        cin >> a >> b;
-        if (operationType == "union") {
-        	dsu.unionSet(a, b);
+    int n, m, k;
+    cin >> n >> m >> k;
+
+    int u, v;
+    for (int i = 0; i < m; i++) {
+        cin >> u >> v;
+    }
+
+    vector<string> answers;
+    vector<operation> operations;
+    string ops;
+
+    for (int i = 0; i < k; i++) {
+        cin >> ops >> u >> v;
+        operations.push_back(operation(ops, u, v));
+    }
+
+    DSU dsu(n);
+
+    for (int i = k - 1; i >= 0; i--) {
+        if (operations[i].operationType == "cut") {
+            dsu.unionSet(operations[i].a, operations[i].b);
         } else {
-        	bool sameSet = dsu.connected(a, b);
-        	cout << ((sameSet) ? "YES" : "NO") << endl;
+            if (dsu.connected(operations[i].a, operations[i].b)) {
+                answers.push_back("YES");
+            } else {
+                answers.push_back("NO");
+            }
         }
-        // cout << dsu.getComponents() << " " << dsu.getMaxSize() << endl;
+    }
+    // if(answers.empty()) {
+    //     return;
+    // }
+    for (int i = answers.size() - 1; i >= 0; --i) {
+        cout << answers[i] << "\n";
     }
 }
  

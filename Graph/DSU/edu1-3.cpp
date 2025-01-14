@@ -124,28 +124,28 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
  
 class DSU {
 private:
-	int components;
-	int maxSize;
     vector<int> parent;
-    vector<int> size; // Alternatively, use rank if preferred.
+    vector<int> rank; // Alternatively, use rank if preferred.
+    vector<int> xpRoot, diff;
 
 public:
     // Constructor to initialize DSU with n elements.
     DSU(int n) {
         parent.resize(n + 10);
-        size.resize(n + 10, 1); // Initial size (or size) of each set is 1.
-        for (int i = 0; i < n; ++i) {
+        rank.resize(n + 10, 1); // Initial size (or size) of each set is 1.
+        xpRoot.resize(n + 10, 0);
+        diff.resize(n + 10, 0);
+        for (int i = 0; i <= n; ++i) {
             parent[i] = i; // Each element is its own parent initially.
         }
-        components = n;
-        maxSize = 1;
     }
 
     int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]); // Path compression.
+        if(x == parent[x]) {
+            return x;
         }
-        return parent[x];
+        diff[x] += diff[parent[x]];
+        return parent[x] = find(parent[x]);
     }
 
     // Union two sets by size (or size).
@@ -158,14 +158,13 @@ public:
         }
 
         // Union by size: attach the smaller tree under the larger tree.
-        if(size[rootX] < size[rootY]) {
+        if(rank[rootX] < rank[rootY]) {
         	swap(rootX, rootY);
+        } else if (rank[rootX] == rank[rootY]) {
+            rank[rootX]++;
         }
-        
         parent[rootY] = rootX; // Merge the smaller tree to larger tree (based on size)
-        size[rootX] += size[rootY];
-        maxSize = max(maxSize, size[rootX]);
-        components--;
+        diff[rootY] = xpRoot[rootY] - xpRoot[rootX]; // construct the diff
         return true; // Union was successful.
     }
 
@@ -174,13 +173,16 @@ public:
         return find(x) == find(y);
     }
 
-    int getComponents() {
-    	return components;
+    void addXp(int x, int v) {
+        int rootX = find(x);
+        xpRoot[rootX] += v;
     }
 
-    int getMaxSize() {
-    	return maxSize;
+    int getXp(int x) {
+        int rootX = find(x);
+        return xpRoot[rootX] + diff[x];
     }
+
 };
 
 void solve() {
@@ -191,14 +193,16 @@ void solve() {
 	int a, b;
     for(int i = 0; i < m; ++i) {
         cin >> operationType;
-        cin >> a >> b;
-        if (operationType == "union") {
-        	dsu.unionSet(a, b);
+        cin >> a;
+        if (operationType == "join") {
+        	cin >> b;
+            dsu.unionSet(a, b);
+        } else if (operationType == "add") {
+            cin >> b;     
+        	dsu.addXp(a, b);
         } else {
-        	bool sameSet = dsu.connected(a, b);
-        	cout << ((sameSet) ? "YES" : "NO") << endl;
+            cout << dsu.getXp(a) << endl;
         }
-        // cout << dsu.getComponents() << " " << dsu.getMaxSize() << endl;
     }
 }
  

@@ -124,21 +124,22 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
  
 class DSU {
 private:
-	int components;
-	int maxSize;
     vector<int> parent;
     vector<int> size; // Alternatively, use rank if preferred.
+    vector<int> minimal, maximal;
 
 public:
     // Constructor to initialize DSU with n elements.
     DSU(int n) {
         parent.resize(n + 10);
         size.resize(n + 10, 1); // Initial size (or size) of each set is 1.
-        for (int i = 0; i < n; ++i) {
+        minimal.resize(n + 10);
+        maximal.resize(n + 10);
+        for (int i = 0; i <= n; ++i) {
             parent[i] = i; // Each element is its own parent initially.
+            minimal[i] = i; // Each element is minimal
+            maximal[i] = i; // Each element is maximal
         }
-        components = n;
-        maxSize = 1;
     }
 
     int find(int x) {
@@ -164,8 +165,8 @@ public:
         
         parent[rootY] = rootX; // Merge the smaller tree to larger tree (based on size)
         size[rootX] += size[rootY];
-        maxSize = max(maxSize, size[rootX]);
-        components--;
+        minimal[rootX] = min(minimal[rootX], minimal[rootY]);
+        maximal[rootX] = max(maximal[rootX], maximal[rootY]);
         return true; // Union was successful.
     }
 
@@ -174,12 +175,9 @@ public:
         return find(x) == find(y);
     }
 
-    int getComponents() {
-    	return components;
-    }
-
-    int getMaxSize() {
-    	return maxSize;
+    vector<int> getInfo(int a) {
+        int root = find(a);
+        return {minimal[root], maximal[root], size[root]};
     }
 };
 
@@ -191,12 +189,13 @@ void solve() {
 	int a, b;
     for(int i = 0; i < m; ++i) {
         cin >> operationType;
-        cin >> a >> b;
+        cin >> a;
         if (operationType == "union") {
-        	dsu.unionSet(a, b);
-        } else {
-        	bool sameSet = dsu.connected(a, b);
-        	cout << ((sameSet) ? "YES" : "NO") << endl;
+        	cin >> b;
+            dsu.unionSet(a, b);
+        } else {        
+        	vector<int> infos = dsu.getInfo(a);
+            cout << infos[0] << " " << infos[1] << " " << infos[2] << endl;
         }
         // cout << dsu.getComponents() << " " << dsu.getMaxSize() << endl;
     }
