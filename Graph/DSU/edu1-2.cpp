@@ -1,71 +1,25 @@
 /*
-	Implement disjoint sets (union-find) data structure. 
-You have to perform queries of two types:
+Implement a disjoint sets union data structure to perform the following queries:
 
-1) union u v
-   Unite the two sets that contain u and v, respectively.
+1. **union u v**: Unite two sets containing elements `u` and `v`, respectively.
+2. **get v**: Retrieve information about the set containing element `v`, including:
+   - The minimal element in the set.
+   - The maximal element in the set.
+   - The total number of elements in the set.
 
-2) get u v
-   Check whether two elements u and v belong to the same set.
+### Input Format
+The input consists of:
+- The first line containing two integers `n` and `m` (1 ≤ n, m ≤ 300,000) — the number of elements and the number of queries.
+- The next `m` lines, each representing a query:
+  - **union u v**: Unite the sets containing `u` and `v` (1 ≤ u, v ≤ n).
+  - **get v**: Find information about the set containing `v` (1 ≤ v ≤ n).
 
-Input Format:
---------------
-The first line of the input contains two integers n and m (1 ≤ n, m ≤ 10^5) —
-the number of elements (numbered from 1 to n) and the number of queries.
-The next m lines contain queries, one per line.
+### Output Format
+For each **get** operation, output the result on a separate line in the order of queries. Each result should consist of three integers:
+- The minimal element in the set.
+- The maximal element in the set.
+- The total number of elements in the set.
 
-For a query "union", the line looks like:
-    union u v
-(1 ≤ u, v ≤ n)
-
-For a query "get", the line looks like:
-    get u v
-(1 ≤ u, v ≤ n)
-
-Output Format:
---------------
-For each "get" query, output one line with "YES" if the elements u and v 
-are in the same set, and "NO" otherwise.
-
-Example 1:
------------
-Input:
-4 4
-union 1 2
-union 1 3
-get 1 4
-get 2 3
-
-Output:
-NO
-YES
-
-Example 2:
------------
-Input:
-5 5
-union 1 2
-union 2 3
-get 1 4
-union 3 4
-get 1 4
-
-Output:
-NO
-YES
-
-Example 3:
------------
-Input:
-5 4
-union 1 2
-union 2 3
-get 1 3
-get 4 5
-
-Output:
-YES
-NO
 */
 
 #include <bits/stdc++.h>

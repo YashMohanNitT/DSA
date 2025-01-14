@@ -1,71 +1,28 @@
 /*
-	Implement disjoint sets (union-find) data structure. 
-You have to perform queries of two types:
+You are given an undirected graph and a sequence of operations of two types:
 
-1) union u v
-   Unite the two sets that contain u and v, respectively.
+1. **cut u v**: Remove the edge `u-v` from the graph.
+2. **ask u v**: Check whether vertices `u` and `v` belong to the same connected component.
 
-2) get u v
-   Check whether two elements u and v belong to the same set.
+Initially, the graph contains `m` edges. After all the operations are performed, the graph will contain no edges. Your task is to find the result of each operation of type **ask**.
 
-Input Format:
---------------
-The first line of the input contains two integers n and m (1 ≤ n, m ≤ 10^5) —
-the number of elements (numbered from 1 to n) and the number of queries.
-The next m lines contain queries, one per line.
+### Input
+The input consists of:
+- The first line containing three integers `n`, `m`, and `k` (1 ≤ n ≤ 50,000, 0 ≤ m ≤ 100,000, m ≤ k ≤ 150,000) — the number of vertices, the number of edges, and the number of operations, respectively.
+- The next `m` lines, each containing two integers `u` and `v` (1 ≤ u, v ≤ n) — the endpoints of edge `i`. Vertices are numbered from 1 to `n`, and the graph has no loops or multiple edges.
+- The next `k` lines describe an operation in the following format:
+  - **"cut u v"** (1 ≤ u, v ≤ n): Remove the edge between vertices `u` and `v`.
+  - **"ask u v"** (1 ≤ u, v ≤ n): Check whether vertices `u` and `v` are in the same component.
 
-For a query "union", the line looks like:
-    union u v
-(1 ≤ u, v ≤ n)
+Each edge is mentioned in a **cut** operation exactly once.
 
-For a query "get", the line looks like:
-    get u v
-(1 ≤ u, v ≤ n)
+### Output
+For each **ask u v** operation, output:
+- `"YES"` if vertices `u` and `v` are in the same connected component.
+- `"NO"` otherwise.
 
-Output Format:
---------------
-For each "get" query, output one line with "YES" if the elements u and v 
-are in the same set, and "NO" otherwise.
+The answers should be printed in the same order as the corresponding **ask** operations in the input.
 
-Example 1:
------------
-Input:
-4 4
-union 1 2
-union 1 3
-get 1 4
-get 2 3
-
-Output:
-NO
-YES
-
-Example 2:
------------
-Input:
-5 5
-union 1 2
-union 2 3
-get 1 4
-union 3 4
-get 1 4
-
-Output:
-NO
-YES
-
-Example 3:
------------
-Input:
-5 4
-union 1 2
-union 2 3
-get 1 3
-get 4 5
-
-Output:
-YES
-NO
 */
 
 #include <bits/stdc++.h>

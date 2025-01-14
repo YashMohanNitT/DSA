@@ -1,71 +1,21 @@
 /*
-	Implement disjoint sets (union-find) data structure. 
-You have to perform queries of two types:
+In a novel online game, the players fight the monsters and get experience points by joining raid teams. After defeating a monster, all players in a team gain the same experience points. Teams cannot be split up, and no one can leave a team. The only operation allowed is joining two teams together.
 
-1) union u v
-   Unite the two sets that contain u and v, respectively.
+You are tasked with maintaining the experience points of players in the game.
 
-2) get u v
-   Check whether two elements u and v belong to the same set.
+### Input
+The input consists of:
+- The first line containing two integers `n` and `m` (1 ≤ n, m ≤ 200,000) — the number of players and the number of queries.
+- The next `m` lines contain queries of three types:
+  1. **join X Y**: Join the teams of players `X` and `Y` (if they are already in the same team, nothing changes).
+  2. **add X V**: Add `V` (1 ≤ V ≤ 100) experience points to each player in the team containing player `X`.
+  3. **get X**: Output the current number of experience points of player `X`.
 
-Input Format:
---------------
-The first line of the input contains two integers n and m (1 ≤ n, m ≤ 10^5) —
-the number of elements (numbered from 1 to n) and the number of queries.
-The next m lines contain queries, one per line.
+Initially, each player has `0` experience points and belongs to their own team of size one.
 
-For a query "union", the line looks like:
-    union u v
-(1 ≤ u, v ≤ n)
+### Output
+For each **get X** query, output the current number of experience points of player `X` on a separate line.
 
-For a query "get", the line looks like:
-    get u v
-(1 ≤ u, v ≤ n)
-
-Output Format:
---------------
-For each "get" query, output one line with "YES" if the elements u and v 
-are in the same set, and "NO" otherwise.
-
-Example 1:
------------
-Input:
-4 4
-union 1 2
-union 1 3
-get 1 4
-get 2 3
-
-Output:
-NO
-YES
-
-Example 2:
------------
-Input:
-5 5
-union 1 2
-union 2 3
-get 1 4
-union 3 4
-get 1 4
-
-Output:
-NO
-YES
-
-Example 3:
------------
-Input:
-5 4
-union 1 2
-union 2 3
-get 1 3
-get 4 5
-
-Output:
-YES
-NO
 */
 
 #include <bits/stdc++.h>
