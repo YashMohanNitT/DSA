@@ -1,74 +1,36 @@
 /*
-    Farmer John's cows have grown tired of his daily request that they sort themselves before leaving the barn each morning. They have just completed their PhDs in quantum physics, and are ready to speed things up a bit.
-This morning, as usual, Farmer John's N
- cows (1≤N≤105
-), conveniently numbered 1…N
-, are scattered throughout the barn at N
- distinct locations, also numbered 1…N
-, such that cow i
- is at location pi
-. But this morning there are also M
- wormholes (1≤M≤105
-), numbered 1…M
-, where wormhole i
- bidirectionally connects location ai
- with location bi
-, and has a width wi
- (1≤ai,bi≤N,ai≠bi,1≤wi≤109
-).
+Farmer John's N
+ cows (1≤N≤1000
+) want to organize an emergency "moo-cast" system for broadcasting important messages among themselves.
+Instead of mooing at each-other over long distances, the cows decide to equip themselves with walkie-talkies, one for each cow. These walkie-talkies each have a limited transmission radius, but cows can relay messages to one-another along a path consisting of several hops, so it is not necessary for every cow to be able to transmit directly to every other cow.
 
-At any point in time, two cows located at opposite ends of a wormhole may choose to simultaneously swap places through the wormhole. The cows must perform such swaps until cow i
- is at location i
- for 1≤i≤N
+The cows need to decide how much money to spend on their walkie-talkies. If they spend $X, they will each get a walkie-talkie capable of transmitting up to a distance of X−−√
+. That is, the squared distance between two cows must be at most X
+ for them to be able to communicate.
+
+Please help the cows determine the minimum integer value of X
+ such that a broadcast from any cow will ultimately be able to reach every other cow.
+
+INPUT FORMAT (file moocast.in):
+The first line of input contains N
+.
+The next N
+ lines each contain the x
+ and y
+ coordinates of a single cow. These are both integers in the range 0…25,000
 .
 
-The cows are not eager to get squished by the wormholes. Help them maximize the width of the least wide wormhole which they must use to sort themselves. It is guaranteed that it is possible for the cows to sort themselves.
-
-SCORING:
-Test cases 3-5 satisfy N,M≤1000.
-Test cases 6-10 satisfy no additional constraints.
-INPUT FORMAT (file wormsort.in):
-The first line contains two integers, N
- and M
-.
-The second line contains the N
- integers p1,p2,…,pN
-. It is guaranteed that p
- is a permutation of 1…N.
-
-For each i
- between 1
- and M
-, line i+2
- contains the integers ai
-, bi
-, and wi
-.
-
-OUTPUT FORMAT (file wormsort.out):
-A single integer: the maximum minimal wormhole width which a cow must squish itself into during the sorting process. If the cows do not need any wormholes to sort themselves, output −1
-.
+OUTPUT FORMAT (file moocast.out):
+Write a single line of output containing the integer X
+ giving the minimum amount the cows must spend on walkie-talkies.
 SAMPLE INPUT:
-4 4
-3 2 1 4
-1 2 9
-1 3 7
-2 3 10
-2 4 3
+4
+1 3
+5 4
+7 2
+6 1
 SAMPLE OUTPUT:
-9
-Here is one possible way to sort the cows using only wormholes of width at least 9:
-
-Cow 1 and cow 2 swap positions using the third wormhole.
-Cow 1 and cow 3 swap positions using the first wormhole.
-Cow 2 and cow 3 swap positions using the third wormhole.
-SAMPLE INPUT:
-4 1
-1 2 3 4
-4 2 13
-SAMPLE OUTPUT:
--1
-No wormholes are needed to sort the cows.
+17
     
 */
 
