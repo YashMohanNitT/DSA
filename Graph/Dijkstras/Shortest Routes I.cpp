@@ -85,7 +85,7 @@ inline void __evars(vector<string>::iterator it, T a, Args... args) {
 	cout << "; ";
 	__evars(++it, args...);
 }
- 
+using pii = pair<int,int>;
 void solve() {
 	int n, m;
 	cin >> n >> m;
@@ -96,35 +96,32 @@ void solve() {
 		cin >> a >> b >> c;
 		adj[a].push_back({b, c});
 	}
+	priority_queue<pii, vector<pii>, greater<pii>> pq;
+	pq.push(pii(0, 1));
 	dist[1] = 0;
-	pq<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
-	q.push({0, 1});
-	while(!q.empty()) {
-		pair<int, int> curr = q.top();
-		q.pop();
-		int length = curr.first;
-		int currCityId = curr.second;
-
+	while(!pq.empty()) {
+		pii top = pq.top(); pq.pop();
+		int currDistance = top.first, currCity = top.second;
 		/*
-			- (dist[currCityId] < length) ensures that the curr city being processed has the lowest distance possible.
+			if (currDistance != dist[currCity]) or if(dist[currCityId] < length)  ensures that the curr city being processed has the lowest distance possible.
+			- Once the node is processed it won't be processed again.
 			- since length is already greater than the current distance of the node to be processed, no extra node added to the current path can reduce its length. 			
 		*/
-		if (dist[currCityId] < length) {
+		if (dist[currCity] < currDistance) {
 			continue;
 		}
-		for(auto [nexyCityId, adjacentLength] : adj[currCityId]) {
-			if (dist[nexyCityId] > dist[currCityId] + adjacentLength) {
-				dist[nexyCityId] = dist[currCityId] + adjacentLength;
-				q.push({dist[nexyCityId], nexyCityId});
+		for (auto &[nextCity, distanceBetweenThem] : adj[currCity]) {
+			int nextCityDistance = dist[currCity] + distanceBetweenThem;
+			if (nextCityDistance < dist[nextCity]) {
+				dist[nextCity] = nextCityDistance;
+				pq.push(pii(nextCityDistance, nextCity));
 			}
 		}
 	}
-	for(int i = 1; i <= n; ++i) {
-		cout << dist[i];
-		if(i != n) {
-			cout << " ";
-		}
+	for (int i = 1; i <= n; ++i) {
+		cout << dist[i] << " ";
 	}
+	cout << endl;
 }
  
 int32_t main()
