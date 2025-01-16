@@ -85,7 +85,7 @@ struct Edge {
 
 int n, m, v;
 vector<Edge> edges;
-const int INF = 1000000000;
+const long long INF = LLONG_MAX;
 
 void solve()
 {
@@ -95,12 +95,12 @@ void solve()
     int x;
     for (int i = 0; i < n; ++i) { // notice here that we do it n times. Ideally this would be done n-1 times and then one more separate run.
         x = -1; // this resets after every relaxation. Thus in the nth turn if we get a new relaxation that means we have a neagtive cycle.
-        for (Edge e : edges) {
-            if (d[e.a] < INF) {
-                if (d[e.b] > d[e.a] + e.cost) {
-                    d[e.b] = max(-INF, d[e.a] + e.cost); // -INF to avoid int overflow
-                    p[e.b] = e.a;
-                    x = e.b;
+        for (Edge edge : edges) {
+            if (d[edge.a] < INF) {
+                if (d[edge.b] > d[edge.a] + edge.cost) {
+                    d[edge.b] = max(-INF, d[edge.a] + edge.cost); // -INF to avoid LONG LONG overflow
+                    p[edge.b] = edge.a;
+                    x = edge.b;
                 }
             }
         }
